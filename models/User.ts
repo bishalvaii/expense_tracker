@@ -1,35 +1,20 @@
-// models/User.js
-const bcrypt = require('bcryptjs');
+import mongoose, { Document, Schema } from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    date: {
-        type: Date,
-        default: Date.now,
-    },
+// Define the interface for the User model
+interface IUser extends Document {
+    username: string;
+    email: string;
+    password: string;
+}
+
+// Define the schema for the User model
+const UserSchema: Schema = new Schema({
+    username: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true }
 });
 
-// Encrypt password before saving
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) {
-        next();
-    }
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-});
+// Create the model and export it
+const User = mongoose.model<IUser>("User", UserSchema);
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;
+export default User;
