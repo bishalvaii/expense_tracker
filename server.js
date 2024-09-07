@@ -34,9 +34,9 @@ app.use(express.json());
 
 
 // Endpoints
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Hello world");
-// });
+app.get("/", (req, res) => {
+  res.send("Hello world");
+});
 
 // app.post("/api/signup", async (req: Request, res: Response) => {
 //   try {
