@@ -1,6 +1,6 @@
+import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import express, { Application, Request, Response } from "express"; // Import Request and Response types
-import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import User, { IUser } from "./models/User"; // Import IUser interface
 
