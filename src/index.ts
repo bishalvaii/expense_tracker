@@ -2,10 +2,12 @@ import dotenv from "dotenv";
 import express, { Application } from "express"; // Import Request and Response types
 import mongoose from "mongoose";
 import authroutes from "./routes/authRoutes";
+import cors from 'cors'
 
 dotenv.config();
 
 const app: Application = express();
+app.use(cors())
 
 interface ProcessEnv {
   PORT?: string;
