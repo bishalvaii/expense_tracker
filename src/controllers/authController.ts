@@ -12,13 +12,11 @@ export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
 
   try {
-    // Check if the user already exists
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    // Create a new user instance
     const newUser: IUser = new User({
       username,
       email,
@@ -26,8 +24,6 @@ export const register = async (req: Request, res: Response) => {
     });
 
     newUser.password = await generateHash(password);
-
-    // Save the user to the database
     await newUser.save();
 
     res.status(201).json({ msg: "User registered successfully" });
@@ -44,7 +40,10 @@ export const login = async (req: Request, res: Response) => {
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
-    res.status(200).json({ msg: "User logged in successfully", user });
+    res.status(200).json({
+      msg: "User logged in successfully",
+      user: { id: user?._id, username: user?.username, email: user?.email },
+    });
   } catch (error: any) {
     res.status(400).json({ msg: error.message });
   }
