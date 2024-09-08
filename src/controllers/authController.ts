@@ -2,6 +2,12 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import User, { IUser } from "../models/User";
 
+const generateHash = async (password: string) => {
+  const salt = await bcrypt.genSalt(10);
+  const pwd = await bcrypt.hash(password, salt);
+  return pwd;
+};
+
 export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
 
@@ -19,9 +25,7 @@ export const register = async (req: Request, res: Response) => {
       password,
     });
 
-    // Encrypt the password before saving the user
-    const salt = await bcrypt.genSalt(10);
-    newUser.password = await bcrypt.hash(password, salt);
+    newUser.password = await generateHash(password);
 
     // Save the user to the database
     await newUser.save();
@@ -34,10 +38,13 @@ export const register = async (req: Request, res: Response) => {
 };
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-
   try {
-    const user = await User.findOne({ email, password });
-    res.status(201).json({ user });
+    const user = await User.findOne({ email });
+    const isMatch = await bcrypt.compare(password, user?.password || "");
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
+    res.status(200).json({ msg: "User logged in successfully", user });
   } catch (error: any) {
     res.status(400).json({ msg: error.message });
   }

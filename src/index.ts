@@ -1,13 +1,13 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express, { Application } from "express"; // Import Request and Response types
 import mongoose from "mongoose";
-import authroutes from "./routes/authRoutes";
-import cors from 'cors'
+import router from "./routes/router";
 
 dotenv.config();
 
 const app: Application = express();
-app.use(cors())
+app.use(cors());
 
 interface ProcessEnv {
   PORT?: string;
@@ -35,4 +35,4 @@ mongoose
 // Middleware
 app.use(express.json());
 
-app.use("/api", authroutes);
+app.use("/api", router);
