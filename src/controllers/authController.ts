@@ -1,22 +1,7 @@
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/User";
-
-const generateHash = async (password: string) => {
-  const salt = await bcrypt.genSalt(10);
-  const pwd = await bcrypt.hash(password, salt);
-  return pwd;
-};
-
-const generateToken = (user: IUser) => {
-  return jwt.sign({ id: user._id }, secret, { expiresIn: "1h" });
-};
-
-dotenv.config();
-const secret = process.env.JWT_SECRET || "secret";
-console.log(secret);
+import { generateHash, generateToken } from "../utils";
 
 export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
@@ -71,7 +56,6 @@ export const login = async (req: Request, res: Response) => {
       msg: "User logged in successfully",
       token,
       user: {
-        msg: "User logged in successfully",
         ...user.toJSON(),
         password: undefined,
       },
