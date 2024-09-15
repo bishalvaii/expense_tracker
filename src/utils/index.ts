@@ -1,10 +1,9 @@
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
+import "dotenv/config";
 import jwt from "jsonwebtoken";
 import { IUser } from "../models/User";
 
-dotenv.config();
-const secret = process.env.JWT_SECRET || "secret";
+const secret = process.env.JWT_SECRET!;
 
 const generateHash = async (password: string) => {
   const salt = await bcrypt.genSalt(10);
@@ -13,18 +12,18 @@ const generateHash = async (password: string) => {
 };
 
 const generateToken = (user: IUser) => {
-  return jwt.sign({ id: user._id }, secret, { expiresIn: "1h" });
+  return jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
+    expiresIn: "1h",
+  });
 };
 
 const verifyToken = (token: string) => {
   try {
-    const decoded = jwt.verify(token, secret);
-    return decoded;
-  } catch (error: any) {
-    if (error.name === "TokenExpiredError") {
-      throw new Error("Token expired");
-    }
-    throw new Error("Invalid token");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    console.log(decoded);
+    return decoded as { id: string };
+  } catch (err) {
+    return false;
   }
 };
 
@@ -33,3 +32,4 @@ const decodeToken = (token: string) => {
 };
 
 export { decodeToken, generateHash, generateToken, verifyToken };
+
