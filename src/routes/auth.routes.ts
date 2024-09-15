@@ -7,4 +7,3 @@ router.post("/signup", register);
 router.post("/login", login);
 
 export default router;
-// app.post("/api/users", async (req: Request, res: Response) => );
