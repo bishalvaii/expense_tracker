@@ -10,8 +10,11 @@ const app: Application = express();
 app.use(cors());
 
 interface ProcessEnv {
-  PORT?: string;
   MONGO_URI?: string;
+  PORT?: string;
+  JWT_SECRET?: string;
+  JWT_REFRESH_TOKEN_EXPIRES_IN?: string;
+  JWT_ACCESS_TOKEN_EXPIRES_IN?: string;
 }
 
 const { PORT, MONGO_URI } = process.env as ProcessEnv;
